@@ -1,7 +1,7 @@
 let calculator = {
-  a,
-  b,
-  read: function(x, y) {
+  a: 0,
+  b: 0,
+  read: function(x = 0, y = 0) {
     this.a = x;
     this.b = y;
   },
