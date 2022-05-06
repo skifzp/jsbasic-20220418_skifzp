@@ -5,19 +5,13 @@
 
   <p>Перед скриптом...</p>
 
-  <script src="3-module/1-task/index.js"></script>
+  <script src="3-module/5-task/index.js"></script>
 
   <script>
 
-let vasya = { name: 'Вася', age: 25 };
-let petya = { name: 'Петя', age: 30 };
-let masha = { name: 'Маша', age: 28 };
+let inputData = '1 и -15 -5.8 или 10 хотя 34 + -5.3 и 73';
 
-let users = [ vasya, petya, masha ];
-
-let names = namify(users);
-
-alert(names);
+console.log(getMinMax(inputData)); // { min: -5.8, max: 73  }
   </script>
 
 </body>
