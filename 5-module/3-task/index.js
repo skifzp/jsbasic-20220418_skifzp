@@ -12,9 +12,6 @@ function initCarousel() {
     };
 
     right() {
-      if ( this.curNumberOfImage === 1 ) {
-        this.elemArrowLeft.style.display = '';
-      }
       if ( this.curNumberOfImage < 4 ) {
         this.elemCarouselInner.style.transform = 'translateX(-'+ this.shift * this.curNumberOfImage +'px)';
         console.log('translateX(-'+ this.shift * this.curNumberOfImage +'px)');
@@ -23,12 +20,12 @@ function initCarousel() {
           this.elemArrowRight.style.display = 'none';
         }
       }
+      if ( this.curNumberOfImage > 1 ) {
+        this.elemArrowLeft.style.display = '';
+      }
     };
 
     left() {
-      if ( this.curNumberOfImage === 4 ) {
-        this.elemArrowRight.style.display = '';
-      }
       if ( this.curNumberOfImage > 1 ) {
         this.curNumberOfImage--;
         this.elemCarouselInner.style.transform = 'translateX(-'+ this.shift * (this.curNumberOfImage-1) +'px)';
@@ -36,6 +33,9 @@ function initCarousel() {
         if ( this.curNumberOfImage === 1 ) {
           this.elemArrowLeft.style.display = 'none';
         }
+      }
+      if ( this.curNumberOfImage < 4 ) {
+        this.elemArrowRight.style.display = '';
       }
     };
 

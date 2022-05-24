@@ -3,20 +3,24 @@
 
 
 <script>
-let ladder = {
-  step: 0,
-  up() {
-    this.step++;
-    return this;
-  },
-  down() {
-    this.step--;
-    return this;
-  },
-  showStep: function() { // показывает текущую ступеньку
-    alert( this.step );
-  }
+
+class CoffeeMachine {
+
+#waterAmount = 0;
+
+get waterAmount() {
+  return this.#waterAmount;
 };
-ladder.up().up().down().showStep();
+
+set waterAmount(value) {
+  if (value < 0) throw new Error("Отрицательный уровень воды");
+  this.#waterAmount = value;
+};
+}
+
+let machine = new CoffeeMachine();
+
+machine.waterAmount = 100;
+alert(machine.waterAmount); 
 </script>
 </body>
