@@ -1,91 +1,76 @@
-<!doctype html>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <style>
+    .slider {
+      border-radius: 5px;
+      background: #E0E0E0;
+      background: linear-gradient(left top, #E0E0E0, #EEEEEE);
+      width: 310px;
+      height: 15px;
+      margin: 5px;
+    }
+
+    .thumb {
+      width: 10px;
+      height: 25px;
+      border-radius: 3px;
+      position: relative;
+      left: 10px;
+      top: -5px;
+      background: blue;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
 <body>
 
-  <h2>Пример минимально необходимой структуры таблицы (только HTML) для прохождения тестов:</h1>
-    <div class="example">
-      <table>
-        <thead>
-          <tr>
-            <th>Имя</th>
-            <th>Возраст</th>
-            <th>Зарплата</th>
-            <th>Город</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Ilia</td>
-            <td>25</td>
-            <td>1000</td>
-            <td>Petrozavodsk</td>
-            <td><button>X</button></td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  
-    <h2>Результат выполнения вашего кода:</h2>
-  
-    <script>
-  
-      let rows = [
-        {
-          name: 'Ilia',
-          age: 25,
-          salary: 1000,
-          city: 'Petrozavodsk'
-        },
-        {
-          name: 'Vasya',
-          age: 14,
-          salary: 1500,
-          city: 'Moscow'
-        },
-        {
-          name: 'Ivan',
-          age: 22,
-          salary: 100,
-          city: 'Bryansk'
-        },
-        {
-          name: 'Petya',
-          age: 45,
-          salary: 990,
-          city: 'Chita'
+  <div id="slider" class="slider">
+    <div class="thumb"></div>
+  </div>
+
+  <script>
+    let thumb = slider.querySelector('.thumb');
+
+    thumb.onmousedown = function(event) {
+      event.preventDefault(); // предотвратить запуск выделения (действие браузера)
+
+      let shiftX = event.clientX - thumb.getBoundingClientRect().left;
+      // shiftY здесь не нужен, слайдер двигается только по горизонтали
+
+      document.addEventListener('mousemove', onMouseMove);
+      document.addEventListener('mouseup', onMouseUp);
+
+      function onMouseMove(event) {
+        let newLeft = event.clientX - shiftX - slider.getBoundingClientRect().left;
+
+        // курсор вышел из слайдера => оставить бегунок в его границах.
+        if (newLeft < 0) {
+          newLeft = 0;
         }
-      ];
+        let rightEdge = slider.offsetWidth - thumb.offsetWidth;
+        if (newLeft > rightEdge) {
+          newLeft = rightEdge;
+        }
 
-class UserTable {
-  elem;
-  constructor(rows) {
-    this.elem = this['createTable'](rows);
-    document.onclick = this.onClick.bind(this);
-    
-  }
+        thumb.style.left = newLeft + 'px';
+      }
 
-  createTable(users){
-    let rows = "";
-    for ( let user of users ) {
-      rows += `<tr id="${user.name}"><td>${user.name}</td><td>${user.age}</td><td>${user.salary}</td><td>${user.city}</td><td><button>X</button></td></tr>`;
-    }
-    let html =  "<table><thead><tr><th>Имя</th><th>Возраст</th><th>Зарплата</th><th>Город</th><th></th></tr></thead>"
-            + "<tbody>" + rows + "</tbody></table>";
-    let e = document.createElement('html');
-    e.innerHTML = html;
-    return e;
-  }
+      function onMouseUp() {
+        document.removeEventListener('mouseup', onMouseUp);
+        document.removeEventListener('mousemove', onMouseMove);
+      }
 
-  onClick(event) {
-    let tagName = event.target.tagName;
-    if (tagName != 'BUTTON') {
-      return;
-    }
-    let rowId = event.target.parentElement.parentElement.remove();
-  }
-}
+    };
 
-let table = new UserTable(rows);
-      document.body.append(table.elem);
-</script>
+    thumb.ondragstart = function() {
+      return false;
+    };
+
+  </script>
+
 </body>
+</html>

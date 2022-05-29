@@ -14,7 +14,7 @@ export default class Carousel {
       <div class="carousel__arrow carousel__arrow_right">
         <img src="/assets/images/icons/angle-icon.svg" alt="icon">
       </div>
-      <div class="carousel__arrow carousel__arrow_left">
+      <div class="carousel__arrow carousel__arrow_left" style="display: none;">
         <img src="/assets/images/icons/angle-left-icon.svg" alt="icon">
       </div>
       <div class="carousel__inner">`;
@@ -36,25 +36,24 @@ export default class Carousel {
     return createElement(html);
   }
 
-  addToCart(event){
-    console.log("add");
-    event.target.dispatchEvent(
+  addToCart(target){
+    console.log("id= " + target.closest('.carousel__slide').dataset.id);
+    target.dispatchEvent (
       new CustomEvent("product-add", 
       { // имя события должно быть именно "product-add"
-        detail: event.target.parentElement.parentElement.dataset.id, // Уникальный идентификатора товара из объекта товара
+        detail: target.closest('.carousel__slide').dataset.id, // Уникальный идентификатора товара из объекта товара
         bubbles: true, // это событие всплывает - это понадобится в дальнейшем
       }));
   }
 
-  right() {
-    console.log("right");
+  next() {
     let shift = document.querySelector(".carousel").offsetWidth;
     let elemArrowRight = document.querySelector(".carousel__arrow_right");
     let elemArrowLeft = document.querySelector(".carousel__arrow_left");
     let elemCarouselInner = document.querySelector(".carousel__inner");
 
     if ( this.curNumberOfImage < this.slides.length ) {
-      elemCarouselInner.style.transform = 'translateX(-'+ shift * this.curNumberOfImage +'px)';
+      elemCarouselInner.style.transform = 'translateX(-'+ (shift * this.curNumberOfImage) +'px)';
       console.log('translateX(-'+ shift * this.curNumberOfImage +'px)');
       this.curNumberOfImage++;
       if ( this.curNumberOfImage === 4 ) {
@@ -66,8 +65,7 @@ export default class Carousel {
     }
   }
 
-  left() {
-    console.log("left");
+  prev() {
     let shift = document.querySelector(".carousel").offsetWidth;
     let elemArrowRight = document.querySelector(".carousel__arrow_right");
     let elemArrowLeft = document.querySelector(".carousel__arrow_left");
@@ -75,8 +73,8 @@ export default class Carousel {
 
     if ( this.curNumberOfImage > 1 ) {
       this.curNumberOfImage--;
-      elemCarouselInner.style.transform = 'translateX(-'+ shift * (this.curNumberOfImage-1) +'px)';
-      console.log('translateX(-'+ shift * (this.curNumberOfImage-1) +'px)');
+      elemCarouselInner.style.transform = 'translateX(-'+ (shift * (this.curNumberOfImage-1)) +'px)';
+      //console.log('translateX(-'+ shift * (this.curNumberOfImage-1) +'px)');
       if ( this.curNumberOfImage === 1 ) {
         elemArrowLeft.style.display = 'none';
       }
@@ -86,15 +84,17 @@ export default class Carousel {
     }
   }
 
-  onClick(event) {
-    console.log("click : " + event.target.parentElement.className);
-    let elemClassName = event.target.parentElement.className;
-    if (elemClassName === 'carousel__button') {
-      this.addToCart(event);
-    } else if (elemClassName.includes("carousel__arrow_right")) {
-      this.right();
-    } else if (elemClassName.includes("carousel__arrow_left")) {
-      this.left();
+  onClick({target}) {
+    if (target.closest('.carousel__arrow_right')) {
+      this.next();
     }
-  }
+
+    if (target.closest('.carousel__arrow_left')) {
+      this.prev();
+    }
+
+    if (target.closest('.carousel__button')) {
+      this.addToCart(target);
+    }
+  };
 }

@@ -1,54 +1,51 @@
 function initCarousel() {
-  class Menu {
-    shift = 0;
-    constructor(elem) {
-      this._elem = elem;
-      this.curNumberOfImage = 1;
-      this.elemArrowRight = elem.querySelector(".carousel__arrow_right");
-      this.elemArrowLeft = elem.querySelector(".carousel__arrow_left");
-      this.elemArrowLeft.style.display = 'none';
-      this.elemCarouselInner = elem.querySelector(".carousel__inner");
-      elem.onclick = this.onClick.bind(this);
-    };
-
-    right() {
-      if ( this.curNumberOfImage < 4 ) {
-        this.elemCarouselInner.style.transform = 'translateX(-'+ this.shift * this.curNumberOfImage +'px)';
-        console.log('translateX(-'+ this.shift * this.curNumberOfImage +'px)');
-        this.curNumberOfImage++;
-        if ( this.curNumberOfImage === 4 ) {
-          this.elemArrowRight.style.display = 'none';
+    let curNumberOfImage = 1;
+    let slidesAmount = 4;
+    let elem = document.querySelector('[data-carousel-holder]');
+    let shift = 0;
+  
+    let carouselInnerElem = elem.querySelector('.carousel__inner');
+    let carouselArrowRight = elem.querySelector('.carousel__arrow_right');
+    let carouselArrowLeft = elem.querySelector('.carousel__arrow_left');
+    carouselArrowLeft.style.display = 'none';
+  
+    let next = function(){
+      shift = carouselInnerElem.offsetWidth;
+      if ( curNumberOfImage < slidesAmount ) {
+        carouselInnerElem.style.transform = 'translateX(-'+ (shift * curNumberOfImage) +'px)';
+        //console.log('translateX(-'+ ( shift * curNumberOfImage )+'px)');
+        curNumberOfImage++;
+        if ( curNumberOfImage === 4 ) {
+          carouselArrowRight.style.display = 'none';
         }
       }
-      if ( this.curNumberOfImage > 1 ) {
-        this.elemArrowLeft.style.display = '';
+      if ( curNumberOfImage > 1 ) {
+        carouselArrowLeft.style.display = '';
       }
-    };
+    }
 
-    left() {
-      if ( this.curNumberOfImage > 1 ) {
-        this.curNumberOfImage--;
-        this.elemCarouselInner.style.transform = 'translateX(-'+ this.shift * (this.curNumberOfImage-1) +'px)';
-        console.log('translateX(-'+ this.shift * (this.curNumberOfImage-1) +'px)');
-        if ( this.curNumberOfImage === 1 ) {
-          this.elemArrowLeft.style.display = 'none';
+    let prev = function(){
+      shift = carouselInnerElem.offsetWidth;
+      if ( curNumberOfImage > 1 ) {
+        curNumberOfImage--;
+        carouselInnerElem.style.transform = 'translateX(-'+ shift * (curNumberOfImage-1) +'px)';
+        //console.log('translateX(-'+ shift * (curNumberOfImage-1) +'px)');
+        if ( curNumberOfImage === 1 ) {
+          carouselArrowLeft.style.display = 'none';
         }
       }
-      if ( this.curNumberOfImage < 4 ) {
-        this.elemArrowRight.style.display = '';
+      if ( curNumberOfImage < 4 ) {
+        carouselArrowRight.style.display = '';
       }
     };
 
-    onClick(event) {
-      let elemClassName = event.target.parentElement.className;
-      this.shift = this.elemCarouselInner.offsetWidth;
-      if (elemClassName.includes("carousel__arrow_right")) {
-        this["right"]();
-      } else if (elemClassName.includes("carousel__arrow_left")) {
-        this["left"]();
+    elem.onclick = ({target}) => {
+      if (target.closest('.carousel__arrow_right')) {
+        next();
+      }
+  
+      if (target.closest('.carousel__arrow_left')) {
+        prev();
       }
     };
   }
-
-  new Menu(document.querySelector(".carousel"));
-}
