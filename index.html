@@ -1,75 +1,37 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html>
 
 <head>
   <meta charset="utf-8">
   <style>
-    .slider {
-      border-radius: 5px;
-      background: #E0E0E0;
-      background: linear-gradient(left top, #E0E0E0, #EEEEEE);
-      width: 310px;
-      height: 15px;
-      margin: 5px;
+    #mouse {
+      display: inline-block;
+      cursor: pointer;
+      margin: 0;
     }
 
-    .thumb {
-      width: 10px;
-      height: 25px;
-      border-radius: 3px;
-      position: relative;
-      left: 10px;
-      top: -5px;
-      background: blue;
-      cursor: pointer;
+    #mouse:focus {
+      outline: 1px dashed black;
     }
   </style>
 </head>
 
 <body>
-
-  <div id="slider" class="slider">
-    <div class="thumb"></div>
-  </div>
+  <button id="menu">Меню (нажми меня)</button>
 
   <script>
-    let thumb = slider.querySelector('.thumb');
-
-    thumb.onmousedown = function(event) {
-      event.preventDefault(); // предотвратить запуск выделения (действие браузера)
-
-      let shiftX = event.clientX - thumb.getBoundingClientRect().left;
-      // shiftY здесь не нужен, слайдер двигается только по горизонтали
-
-      document.addEventListener('mousemove', onMouseMove);
-      document.addEventListener('mouseup', onMouseUp);
-
-      function onMouseMove(event) {
-        let newLeft = event.clientX - shiftX - slider.getBoundingClientRect().left;
-
-        // курсор вышел из слайдера => оставить бегунок в его границах.
-        if (newLeft < 0) {
-          newLeft = 0;
-        }
-        let rightEdge = slider.offsetWidth - thumb.offsetWidth;
-        if (newLeft > rightEdge) {
-          newLeft = rightEdge;
-        }
-
-        thumb.style.left = newLeft + 'px';
-      }
-
-      function onMouseUp() {
-        document.removeEventListener('mouseup', onMouseUp);
-        document.removeEventListener('mousemove', onMouseMove);
-      }
-
+    menu.onclick = function() {
+      alert(1);
+  
+      // alert(2)
+      setTimeout(() => menu.dispatchEvent(new CustomEvent("menu-open", {
+        bubbles: true
+      })));
+  
+      alert(2);
     };
-
-    thumb.ondragstart = function() {
-      return false;
-    };
-
+  
+    document.addEventListener('menu-open', () => alert('вложенное событие'))
   </script>
 
 </body>
